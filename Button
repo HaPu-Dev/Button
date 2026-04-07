@@ -1,0 +1,135 @@
+-- ✅ Only run if the game is Fisch
+local allowedPlaceId = 16732694052
+if game.PlaceId ~= allowedPlaceId then
+    return
+end
+
+-- Equipment Buttons (N and H)
+-- Micro tracker style buttons with split in middle
+
+local player = game.Players.LocalPlayer
+local userInputService = game:GetService("UserInputService")
+
+-- Create GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "EquipmentButtons"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main buttons frame
+local buttonsFrame = Instance.new("Frame")
+buttonsFrame.Size = UDim2.new(0, 100, 0, 30)
+buttonsFrame.Position = UDim2.new(0, 10, 0, 50) -- Fixed position
+buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+buttonsFrame.BackgroundTransparency = 0.1
+buttonsFrame.BorderSizePixel = 0
+buttonsFrame.Parent = screenGui
+
+-- Rounded corners for buttons frame (pill shape)
+local buttonsCorner = Instance.new("UICorner")
+buttonsCorner.CornerRadius = UDim.new(0, 15)
+buttonsCorner.Parent = buttonsFrame
+
+-- Split line in the exact middle
+local splitLine = Instance.new("Frame")
+splitLine.Size = UDim2.new(0, 1, 0, 20)
+splitLine.Position = UDim2.new(0.5, -0.5, 0.5, -10)
+splitLine.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+splitLine.BorderSizePixel = 0
+splitLine.Parent = buttonsFrame
+
+-- ========== N BUTTON ==========
+local nButton = Instance.new("TextButton")
+nButton.Size = UDim2.new(0.5, 0, 1, 0)
+nButton.Position = UDim2.new(0, 0, 0, 0)
+nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+nButton.BackgroundTransparency = 0
+nButton.Text = "N"
+nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+nButton.TextSize = 14
+nButton.Font = Enum.Font.GothamBold
+nButton.BorderSizePixel = 0
+nButton.Parent = buttonsFrame
+
+-- Rounded corners for left button
+local nCorner = Instance.new("UICorner")
+nCorner.CornerRadius = UDim.new(0, 15)
+nCorner.Parent = nButton
+
+-- Hover effect for N button
+nButton.MouseEnter:Connect(function()
+	nButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+end)
+
+nButton.MouseLeave:Connect(function()
+	nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+end)
+
+-- N button functionality (Equipment Bag)
+nButton.Activated:Connect(function()
+	local char = player.Character
+	if not char then return end
+	
+	local backpack = player:WaitForChild("Backpack")
+	local tool = backpack:FindFirstChild("Equipment Bag")
+	local equipped = char:FindFirstChild("Equipment Bag")
+	
+	if equipped then
+		equipped.Parent = backpack
+	elseif tool then
+		tool.Parent = char
+	end
+end)
+
+-- ========== H BUTTON ==========
+local hButton = Instance.new("TextButton")
+hButton.Size = UDim2.new(0.5, 0, 1, 0)
+hButton.Position = UDim2.new(0.5, 0, 0, 0)
+hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+hButton.BackgroundTransparency = 0
+hButton.Text = "H"
+hButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+hButton.TextSize = 14
+hButton.Font = Enum.Font.GothamBold
+hButton.BorderSizePixel = 0
+hButton.Parent = buttonsFrame
+
+-- Rounded corners for right button
+local hCorner = Instance.new("UICorner")
+hCorner.CornerRadius = UDim.new(0, 15)
+hCorner.Parent = hButton
+
+-- Hover effect for H button
+hButton.MouseEnter:Connect(function()
+	hButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+end)
+
+hButton.MouseLeave:Connect(function()
+	hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+end)
+
+-- H button functionality (Bestiary)
+hButton.Activated:Connect(function()
+	local char = player.Character
+	if not char then return end
+	
+	local backpack = player:WaitForChild("Backpack")
+	local tool = backpack:FindFirstChild("Bestiary")
+	local equipped = char:FindFirstChild("Bestiary")
+	
+	if equipped then
+		equipped.Parent = backpack
+	elseif tool then
+		tool.Parent = char
+	end
+end)
+
+-- Toggle buttons with ']' key (optional)
+userInputService.InputBegan:Connect(function(input)
+	if input.KeyCode == Enum.KeyCode.RightBracket then
+		buttonsFrame.Visible = not buttonsFrame.Visible
+	end
+end)
+
+print("Equipment Buttons loaded! (N and H)")
+print("Press ']' to toggle buttons visibility")
