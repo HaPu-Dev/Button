@@ -243,30 +243,173 @@ end)
 -- ========== UEQ BUTTON (Unequip All - Hold) ==========
 local ueqButton = Instance.new("TextButton")
 ueqButton.Size = UDim2.new(0.334, 0, 1, 0)
+-- Equipment Buttons (N, H, and UEQ)
+-- Micro tracker style with split sections
+
+local player = game.Players.LocalPlayer
+local userInputService = game:GetService("UserInputService")
+
+-- Create GUI
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "EquipmentButtons"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Main buttons frame (wider to fit 3 buttons)
+local buttonsFrame = Instance.new("Frame")
+buttonsFrame.Size = UDim2.new(0, 150, 0, 32)
+buttonsFrame.Position = UDim2.new(0, 10, 0, 50)
+buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+buttonsFrame.BackgroundTransparency = 0.1
+buttonsFrame.BorderSizePixel = 0
+buttonsFrame.ClipsDescendants = true
+buttonsFrame.Parent = screenGui
+
+-- Rounded corners for buttons frame (pill shape)
+local buttonsCorner = Instance.new("UICorner")
+buttonsCorner.CornerRadius = UDim.new(0, 16)
+buttonsCorner.Parent = buttonsFrame
+
+-- ========== N BUTTON (Equipment Bag) ==========
+local nButton = Instance.new("TextButton")
+nButton.Size = UDim2.new(0.333, 0, 1, 0)
+nButton.Position = UDim2.new(0, 0, 0, 0)
+nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+nButton.BackgroundTransparency = 0
+nButton.Text = "N"
+nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+nButton.TextSize = 14
+nButton.Font = Enum.Font.GothamBold
+nButton.BorderSizePixel = 0
+nButton.AutoButtonColor = false
+nButton.Parent = buttonsFrame
+
+-- Left corner rounding
+local nCorner = Instance.new("UICorner")
+nCorner.CornerRadius = UDim.new(0, 16)
+nCorner.Parent = nButton
+
+-- Hover effect
+nButton.MouseEnter:Connect(function()
+	nButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+end)
+nButton.MouseLeave:Connect(function()
+	nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+end)
+
+-- N button functionality
+nButton.Activated:Connect(function()
+	local char = player.Character
+	if not char then return end
+	
+	local backpack = player:WaitForChild("Backpack")
+	local tool = backpack:FindFirstChild("Equipment Bag")
+	local equipped = char:FindFirstChild("Equipment Bag")
+	
+	if equipped then
+		equipped.Parent = backpack
+	elseif tool then
+		tool.Parent = char
+	end
+end)
+
+-- Split line 1 (between N and H)
+local splitLine1 = Instance.new("Frame")
+splitLine1.Size = UDim2.new(0, 1, 0, 20)
+splitLine1.Position = UDim2.new(0.333, 0, 0.5, 0)
+splitLine1.AnchorPoint = Vector2.new(0, 0.5)
+splitLine1.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+splitLine1.BorderSizePixel = 0
+splitLine1.ZIndex = 2
+splitLine1.Parent = buttonsFrame
+
+-- ========== H BUTTON (Bestiary) ==========
+local hButton = Instance.new("TextButton")
+hButton.Size = UDim2.new(0.333, 0, 1, 0)
+hButton.Position = UDim2.new(0.333, 0, 0, 0)
+hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+hButton.BackgroundTransparency = 0
+hButton.Text = "H"
+hButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+hButton.TextSize = 14
+hButton.Font = Enum.Font.GothamBold
+hButton.BorderSizePixel = 0
+hButton.AutoButtonColor = false
+hButton.Parent = buttonsFrame
+
+-- Hover effect
+hButton.MouseEnter:Connect(function()
+	hButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+end)
+hButton.MouseLeave:Connect(function()
+	hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+end)
+
+-- H button functionality
+hButton.Activated:Connect(function()
+	local char = player.Character
+	if not char then return end
+	
+	local backpack = player:WaitForChild("Backpack")
+	local tool = backpack:FindFirstChild("Bestiary")
+	local equipped = char:FindFirstChild("Bestiary")
+	
+	if equipped then
+		equipped.Parent = backpack
+	elseif tool then
+		tool.Parent = char
+	end
+end)
+
+-- Split line 2 (between H and UEQ)
+local splitLine2 = Instance.new("Frame")
+splitLine2.Size = UDim2.new(0, 1, 0, 20)
+splitLine2.Position = UDim2.new(0.666, 0, 0.5, 0)
+splitLine2.AnchorPoint = Vector2.new(0, 0.5)
+splitLine2.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+splitLine2.BorderSizePixel = 0
+splitLine2.ZIndex = 2
+splitLine2.Parent = buttonsFrame
+
+-- ========== UEQ BUTTON (Unequip All - Hold) ==========
+local ueqButton = Instance.new("TextButton")
+ueqButton.Size = UDim2.new(0.334, 0, 1, 0)
 ueqButton.Position = UDim2.new(0.666, 0, 0, 0)
 ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
 ueqButton.BackgroundTransparency = 0
 ueqButton.Text = "HOLD"
 ueqButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ueqButton.TextSize = 9
+ueqButton.TextSize = 10
 ueqButton.Font = Enum.Font.GothamBold
 ueqButton.BorderSizePixel = 0
+ueqButton.AutoButtonColor = false
 ueqButton.Parent = buttonsFrame
 
 -- Right corner rounding
 local ueqCorner = Instance.new("UICorner")
-ueqCorner.CornerRadius = UDim.new(0, 15)
+ueqCorner.CornerRadius = UDim.new(0, 16)
 ueqCorner.Parent = ueqButton
 
 -- Hover effect
 ueqButton.MouseEnter:Connect(function()
-	ueqButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	if not holding then
+		ueqButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+	end
 end)
 ueqButton.MouseLeave:Connect(function()
-	ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	if not holding then
+		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	end
 	
 	-- Reset holding when mouse leaves
-	holding = false
+	if holding then
+		holding = false
+		if holdThread then
+			task.cancel(holdThread)
+			holdThread = nil
+		end
+		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	end
 end)
 
 -- UEQ button functionality (Unequip all tools on HOLD)
@@ -284,6 +427,7 @@ end
 
 -- Hold logic
 local holding = false
+local holdThread = nil
 
 ueqButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch 
@@ -291,10 +435,13 @@ ueqButton.InputBegan:Connect(function(input)
 		
 		holding = true
 		
-		task.spawn(function()
+		-- Change appearance while holding
+		ueqButton.BackgroundColor3 = Color3.fromRGB(80, 30, 30)
+		
+		holdThread = task.spawn(function()
 			while holding do
 				unequipAll()
-				task.wait(0.1) -- speed (lower = faster, but heavier)
+				task.wait(0.1)
 			end
 		end)
 	end
@@ -305,10 +452,18 @@ ueqButton.InputEnded:Connect(function(input)
 	or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		
 		holding = false
+		
+		-- Restore appearance
+		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+		
+		if holdThread then
+			task.cancel(holdThread)
+			holdThread = nil
+		end
 	end
 end)
 
--- Toggle buttons with ']' key (optional)
+-- Toggle buttons with ']' key
 userInputService.InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.RightBracket then
 		buttonsFrame.Visible = not buttonsFrame.Visible
