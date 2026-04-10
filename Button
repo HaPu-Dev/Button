@@ -1,11 +1,11 @@
--- ✅ Only run if the game is Fisch
+-- ✅ Only run in Fisch
 local allowedPlaceId = 16732694052
+
 if game.PlaceId ~= allowedPlaceId then
     return
 end
 
--- Equipment Buttons (N and H)
--- Micro tracker style buttons with split in middle
+-- Equipment Buttons (Micro Tracker Style + Functions)
 
 local player = game.Players.LocalPlayer
 local userInputService = game:GetService("UserInputService")
@@ -16,403 +16,108 @@ screenGui.Name = "EquipmentButtons"
 screenGui.ResetOnSpawn = false
 screenGui.Parent = player:WaitForChild("PlayerGui")
 
--- Main buttons frame
-local buttonsFrame = Instance.new("Frame")
-buttonsFrame.Size = UDim2.new(0, 100, 0, 30)
-buttonsFrame.Position = UDim2.new(0, 10, 0, 50) -- Fixed position
-buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-buttonsFrame.BackgroundTransparency = 0.1
-buttonsFrame.BorderSizePixel = 0
-buttonsFrame.Parent = screenGui
+-- Main frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 160, 0, 30)
+mainFrame.Position = UDim2.new(0, 10, 0, 50)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BackgroundTransparency = 0.1
+mainFrame.BorderSizePixel = 0
+mainFrame.Active = true
+mainFrame.Draggable = true
+mainFrame.Parent = screenGui
 
--- Rounded corners for buttons frame (pill shape)
-local buttonsCorner = Instance.new("UICorner")
-buttonsCorner.CornerRadius = UDim.new(0, 15)
-buttonsCorner.Parent = buttonsFrame
+-- Rounded corners
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 15)
+corner.Parent = mainFrame
 
--- Split line in the exact middle
-local splitLine = Instance.new("Frame")
-splitLine.Size = UDim2.new(0, 1, 0, 20)
-splitLine.Position = UDim2.new(0.5, -0.5, 0.5, -10)
-splitLine.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine.BorderSizePixel = 0
-splitLine.Parent = buttonsFrame
+-- Padding
+local padding = Instance.new("UIPadding")
+padding.PaddingLeft = UDim.new(0, 6)
+padding.PaddingRight = UDim.new(0, 6)
+padding.PaddingTop = UDim.new(0, 4)
+padding.PaddingBottom = UDim.new(0, 4)
+padding.Parent = mainFrame
 
--- ========== N BUTTON ==========
-local nButton = Instance.new("TextButton")
-nButton.Size = UDim2.new(0.5, 0, 1, 0)
-nButton.Position = UDim2.new(0, 0, 0, 0)
-nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-nButton.BackgroundTransparency = 0
-nButton.Text = "N"
-nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-nButton.TextSize = 14
-nButton.Font = Enum.Font.GothamBold
-nButton.BorderSizePixel = 0
-nButton.Parent = buttonsFrame
+-- Layout
+local layout = Instance.new("UIListLayout")
+layout.FillDirection = Enum.FillDirection.Horizontal
+layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+layout.VerticalAlignment = Enum.VerticalAlignment.Center
+layout.Padding = UDim.new(0, 6)
+layout.Parent = mainFrame
 
--- Rounded corners for left button
-local nCorner = Instance.new("UICorner")
-nCorner.CornerRadius = UDim.new(0, 15)
-nCorner.Parent = nButton
+-- Create section helper
+local function createButton(text, size)
+	local section = Instance.new("Frame")
+	section.Size = UDim2.new(0, 40, 1, 0)
+	section.BackgroundTransparency = 1
+	section.Parent = mainFrame
 
--- Hover effect for N button
-nButton.MouseEnter:Connect(function()
-	nButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-end)
--- ✅ Only execute if the game is Fisch
-local allowedPlaceId = 16732694052
-if game.PlaceId ~= allowedPlaceId then
-    return
-end
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(1, 0, 1, 0)
+	btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	btn.BorderSizePixel = 0
+	btn.Text = text
+	btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+	btn.TextSize = size or 12
+	btn.Font = Enum.Font.GothamBold
+	btn.AutoButtonColor = false
+	btn.Parent = section
 
--- Equipment Buttons (N, H, and UEQ)
--- Micro tracker style with split sections
+	local corner = Instance.new("UICorner")
+	corner.CornerRadius = UDim.new(0, 10)
+	corner.Parent = btn
 
-local player = game.Players.LocalPlayer
-local userInputService = game:GetService("UserInputService")
-
--- Create GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "EquipmentButtons"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
-
--- Main buttons frame (wider to fit 3 buttons)
-local buttonsFrame = Instance.new("Frame")
-buttonsFrame.Size = UDim2.new(0, 150, 0, 30)
-buttonsFrame.Position = UDim2.new(0, 10, 0, 50) -- Fixed position
-buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-buttonsFrame.BackgroundTransparency = 0.1
-buttonsFrame.BorderSizePixel = 0
-buttonsFrame.Parent = screenGui
-
--- Rounded corners for buttons frame (pill shape)
-local buttonsCorner = Instance.new("UICorner")
-buttonsCorner.CornerRadius = UDim.new(0, 15)
-buttonsCorner.Parent = buttonsFrame
-
--- Split lines between buttons
-local splitLine1 = Instance.new("Frame")
-splitLine1.Size = UDim2.new(0, 1, 0, 20)
-splitLine1.Position = UDim2.new(0.333, 0, 0.5, -10)
-splitLine1.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine1.BorderSizePixel = 0
-splitLine1.Parent = buttonsFrame
-
-local splitLine2 = Instance.new("Frame")
-splitLine2.Size = UDim2.new(0, 1, 0, 20)
-splitLine2.Position = UDim2.new(0.666, 0, 0.5, -10)
-splitLine2.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine2.BorderSizePixel = 0
-splitLine2.Parent = buttonsFrame
-
--- ========== N BUTTON (Equipment Bag) ==========
-local nButton = Instance.new("TextButton")
-nButton.Size = UDim2.new(0.333, 0, 1, 0)
-nButton.Position = UDim2.new(0, 0, 0, 0)
-nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-nButton.BackgroundTransparency = 0
-nButton.Text = "N"
-nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-nButton.TextSize = 12
-nButton.Font = Enum.Font.GothamBold
-nButton.BorderSizePixel = 0
-nButton.Parent = buttonsFrame
-
--- Equipment Buttons (N, H, and UEQ)
--- Micro tracker style with split sections
-
-local player = game.Players.LocalPlayer
-local userInputService = game:GetService("UserInputService")
-
--- Create GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "EquipmentButtons"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
-
--- Main buttons frame (wider to fit 3 buttons)
-local buttonsFrame = Instance.new("Frame")
-buttonsFrame.Size = UDim2.new(0, 150, 0, 30)
-buttonsFrame.Position = UDim2.new(0, 10, 0, 50) -- Fixed position
-buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-buttonsFrame.BackgroundTransparency = 0.1
-buttonsFrame.BorderSizePixel = 0
-buttonsFrame.Parent = screenGui
-
--- Rounded corners for buttons frame (pill shape)
-local buttonsCorner = Instance.new("UICorner")
-buttonsCorner.CornerRadius = UDim.new(0, 15)
-buttonsCorner.Parent = buttonsFrame
-
--- Split lines between buttons
-local splitLine1 = Instance.new("Frame")
-splitLine1.Size = UDim2.new(0, 1, 0, 20)
-splitLine1.Position = UDim2.new(0.333, 0, 0.5, -10)
-splitLine1.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine1.BorderSizePixel = 0
-splitLine1.Parent = buttonsFrame
-
-local splitLine2 = Instance.new("Frame")
-splitLine2.Size = UDim2.new(0, 1, 0, 20)
-splitLine2.Position = UDim2.new(0.666, 0, 0.5, -10)
-splitLine2.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine2.BorderSizePixel = 0
-splitLine2.Parent = buttonsFrame
-
--- ========== N BUTTON (Equipment Bag) ==========
-local nButton = Instance.new("TextButton")
-nButton.Size = UDim2.new(0.333, 0, 1, 0)
-nButton.Position = UDim2.new(0, 0, 0, 0)
-nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-nButton.BackgroundTransparency = 0
-nButton.Text = "N"
-nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-nButton.TextSize = 12
-nButton.Font = Enum.Font.GothamBold
-nButton.BorderSizePixel = 0
-nButton.Parent = buttonsFrame
-
--- Left corner rounding
-local nCorner = Instance.new("UICorner")
-nCorner.CornerRadius = UDim.new(0, 15)
-nCorner.Parent = nButton
-
--- Hover effect
-nButton.MouseEnter:Connect(function()
-	nButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-end)
-nButton.MouseLeave:Connect(function()
-	nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-end)
-
--- N button functionality
-nButton.Activated:Connect(function()
-	local char = player.Character
-	if not char then return end
-	
-	local backpack = player:WaitForChild("Backpack")
-	local tool = backpack:FindFirstChild("Equipment Bag")
-	local equipped = char:FindFirstChild("Equipment Bag")
-	
-	if equipped then
-		equipped.Parent = backpack
-	elseif tool then
-		tool.Parent = char
-	end
-end)
-
--- ========== H BUTTON (Bestiary) ==========
-local hButton = Instance.new("TextButton")
-hButton.Size = UDim2.new(0.333, 0, 1, 0)
-hButton.Position = UDim2.new(0.333, 0, 0, 0)
-hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-hButton.BackgroundTransparency = 0
-hButton.Text = "H"
-hButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-hButton.TextSize = 12
-hButton.Font = Enum.Font.GothamBold
-hButton.BorderSizePixel = 0
-hButton.Parent = buttonsFrame
-
--- Hover effect
-hButton.MouseEnter:Connect(function()
-	hButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-end)
-hButton.MouseLeave:Connect(function()
-	hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-end)
-
--- H button functionality
-hButton.Activated:Connect(function()
-	local char = player.Character
-	if not char then return end
-	
-	local backpack = player:WaitForChild("Backpack")
-	local tool = backpack:FindFirstChild("Bestiary")
-	local equipped = char:FindFirstChild("Bestiary")
-	
-	if equipped then
-		equipped.Parent = backpack
-	elseif tool then
-		tool.Parent = char
-	end
-end)
-
--- ========== UEQ BUTTON (Unequip All - Hold) ==========
-local ueqButton = Instance.new("TextButton")
-ueqButton.Size = UDim2.new(0.334, 0, 1, 0)
--- Equipment Buttons (N, H, and UEQ)
--- Micro tracker style with split sections
-
-local player = game.Players.LocalPlayer
-local userInputService = game:GetService("UserInputService")
-
--- Create GUI
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "EquipmentButtons"
-screenGui.ResetOnSpawn = false
-screenGui.Parent = player:WaitForChild("PlayerGui")
-
--- Main buttons frame (wider to fit 3 buttons)
-local buttonsFrame = Instance.new("Frame")
-buttonsFrame.Size = UDim2.new(0, 150, 0, 32)
-buttonsFrame.Position = UDim2.new(0, 10, 0, 50)
-buttonsFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-buttonsFrame.BackgroundTransparency = 0.1
-buttonsFrame.BorderSizePixel = 0
-buttonsFrame.ClipsDescendants = true
-buttonsFrame.Parent = screenGui
-
--- Rounded corners for buttons frame (pill shape)
-local buttonsCorner = Instance.new("UICorner")
-buttonsCorner.CornerRadius = UDim.new(0, 16)
-buttonsCorner.Parent = buttonsFrame
-
--- ========== N BUTTON (Equipment Bag) ==========
-local nButton = Instance.new("TextButton")
-nButton.Size = UDim2.new(0.333, 0, 1, 0)
-nButton.Position = UDim2.new(0, 0, 0, 0)
-nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-nButton.BackgroundTransparency = 0
-nButton.Text = "N"
-nButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-nButton.TextSize = 14
-nButton.Font = Enum.Font.GothamBold
-nButton.BorderSizePixel = 0
-nButton.AutoButtonColor = false
-nButton.Parent = buttonsFrame
-
--- Left corner rounding
-local nCorner = Instance.new("UICorner")
-nCorner.CornerRadius = UDim.new(0, 16)
-nCorner.Parent = nButton
-
--- Hover effect
-nButton.MouseEnter:Connect(function()
-	nButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-end)
-nButton.MouseLeave:Connect(function()
-	nButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-end)
-
--- N button functionality
-nButton.Activated:Connect(function()
-	local char = player.Character
-	if not char then return end
-	
-	local backpack = player:WaitForChild("Backpack")
-	local tool = backpack:FindFirstChild("Equipment Bag")
-	local equipped = char:FindFirstChild("Equipment Bag")
-	
-	if equipped then
-		equipped.Parent = backpack
-	elseif tool then
-		tool.Parent = char
-	end
-end)
-
--- Split line 1 (between N and H)
-local splitLine1 = Instance.new("Frame")
-splitLine1.Size = UDim2.new(0, 1, 0, 20)
-splitLine1.Position = UDim2.new(0.333, 0, 0.5, 0)
-splitLine1.AnchorPoint = Vector2.new(0, 0.5)
-splitLine1.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine1.BorderSizePixel = 0
-splitLine1.ZIndex = 2
-splitLine1.Parent = buttonsFrame
-
--- ========== H BUTTON (Bestiary) ==========
-local hButton = Instance.new("TextButton")
-hButton.Size = UDim2.new(0.333, 0, 1, 0)
-hButton.Position = UDim2.new(0.333, 0, 0, 0)
-hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-hButton.BackgroundTransparency = 0
-hButton.Text = "H"
-hButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-hButton.TextSize = 14
-hButton.Font = Enum.Font.GothamBold
-hButton.BorderSizePixel = 0
-hButton.AutoButtonColor = false
-hButton.Parent = buttonsFrame
-
--- Hover effect
-hButton.MouseEnter:Connect(function()
-	hButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-end)
-hButton.MouseLeave:Connect(function()
-	hButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-end)
-
--- H button functionality
-hButton.Activated:Connect(function()
-	local char = player.Character
-	if not char then return end
-	
-	local backpack = player:WaitForChild("Backpack")
-	local tool = backpack:FindFirstChild("Bestiary")
-	local equipped = char:FindFirstChild("Bestiary")
-	
-	if equipped then
-		equipped.Parent = backpack
-	elseif tool then
-		tool.Parent = char
-	end
-end)
-
--- Split line 2 (between H and UEQ)
-local splitLine2 = Instance.new("Frame")
-splitLine2.Size = UDim2.new(0, 1, 0, 20)
-splitLine2.Position = UDim2.new(0.666, 0, 0.5, 0)
-splitLine2.AnchorPoint = Vector2.new(0, 0.5)
-splitLine2.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-splitLine2.BorderSizePixel = 0
-splitLine2.ZIndex = 2
-splitLine2.Parent = buttonsFrame
-
--- ========== UEQ BUTTON (Unequip All - Hold) ==========
-local ueqButton = Instance.new("TextButton")
-ueqButton.Size = UDim2.new(0.334, 0, 1, 0)
-ueqButton.Position = UDim2.new(0.666, 0, 0, 0)
-ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-ueqButton.BackgroundTransparency = 0
-ueqButton.Text = "HOLD"
-ueqButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ueqButton.TextSize = 10
-ueqButton.Font = Enum.Font.GothamBold
-ueqButton.BorderSizePixel = 0
-ueqButton.AutoButtonColor = false
-ueqButton.Parent = buttonsFrame
-
--- Right corner rounding
-local ueqCorner = Instance.new("UICorner")
-ueqCorner.CornerRadius = UDim.new(0, 16)
-ueqCorner.Parent = ueqButton
-
--- Hover effect
-ueqButton.MouseEnter:Connect(function()
-	if not holding then
-		ueqButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-	end
-end)
-ueqButton.MouseLeave:Connect(function()
-	if not holding then
-		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-	end
-	
-	-- Reset holding when mouse leaves
-	if holding then
-		holding = false
-		if holdThread then
-			task.cancel(holdThread)
-			holdThread = nil
+	btn.MouseEnter:Connect(function()
+		if not btn:GetAttribute("Holding") then
+			btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 		end
-		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+	end)
+
+	btn.MouseLeave:Connect(function()
+		if not btn:GetAttribute("Holding") then
+			btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+		end
+	end)
+
+	return btn
+end
+
+-- Buttons
+local nButton = createButton("🎒", 14)
+local hButton = createButton("📖", 14)
+local ueqButton = createButton("⚡", 14)
+
+ueqButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
+-- Toggle tool helper
+local function toggleTool(toolName)
+	local char = player.Character
+	if not char then return end
+	
+	local backpack = player:WaitForChild("Backpack")
+	local tool = backpack:FindFirstChild(toolName)
+	local equipped = char:FindFirstChild(toolName)
+	
+	if equipped then
+		equipped.Parent = backpack
+	elseif tool then
+		tool.Parent = char
 	end
+end
+
+-- Buttons
+nButton.Activated:Connect(function()
+	toggleTool("Equipment Bag")
 end)
 
--- UEQ button functionality (Unequip all tools on HOLD)
+hButton.Activated:Connect(function()
+	toggleTool("Bestiary")
+end)
+
+-- Unequip all
 local function unequipAll()
 	local char = player.Character
 	local backpack = player:WaitForChild("Backpack")
@@ -425,19 +130,18 @@ local function unequipAll()
 	end
 end
 
--- Hold logic
+-- HOLD logic
 local holding = false
-local holdThread = nil
+local holdThread
 
 ueqButton.InputBegan:Connect(function(input)
 	if input.UserInputType == Enum.UserInputType.Touch 
 	or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		
 		holding = true
-		
-		-- Change appearance while holding
+		ueqButton:SetAttribute("Holding", true)
 		ueqButton.BackgroundColor3 = Color3.fromRGB(80, 30, 30)
-		
+
 		holdThread = task.spawn(function()
 			while holding do
 				unequipAll()
@@ -452,10 +156,9 @@ ueqButton.InputEnded:Connect(function(input)
 	or input.UserInputType == Enum.UserInputType.MouseButton1 then
 		
 		holding = false
-		
-		-- Restore appearance
-		ueqButton.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
-		
+		ueqButton:SetAttribute("Holding", false)
+		ueqButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+
 		if holdThread then
 			task.cancel(holdThread)
 			holdThread = nil
@@ -463,12 +166,11 @@ ueqButton.InputEnded:Connect(function(input)
 	end
 end)
 
--- Toggle buttons with ']' key
+-- Toggle GUI
 userInputService.InputBegan:Connect(function(input)
 	if input.KeyCode == Enum.KeyCode.RightBracket then
-		buttonsFrame.Visible = not buttonsFrame.Visible
+		mainFrame.Visible = not mainFrame.Visible
 	end
 end)
 
-print("Equipment Buttons loaded! (N, H, UEQ - Hold to unequip all)")
-print("Press ']' to toggle buttons visibility")
+print("Equipment Buttons Loaded (Fisch Only)")
